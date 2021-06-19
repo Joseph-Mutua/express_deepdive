@@ -17,11 +17,28 @@ app.use(cookieParser());
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+app.use((req, res, next) => {
+  //Send me onto the next piece of midlleware
+  if (req.query.msg === "fail") {
+    res.locals.msg = "Sorry, this username/password combination doesnt exist";
+  } else {
+    res.locals.msg = "";
+  }
+
+  //Send me onto the next piece of middleware!!
+  next()
+});
+
 app.get("/", (req, res, next) => {
   res.send("Sanity check!!");
 });
 
 app.get("/login", (req, res, next) => {
+  //the req object has a query property in express
+  //req.query is an object with a property of every key in the query string
+
+  //The query string is where you put insecure data, data that is of insignificance
+  console.log(req.query);
   res.render("login");
 });
 
@@ -47,7 +64,9 @@ app.post("/process_login", (req, res, next) => {
     res.cookie("username", username);
     res.redirect("/welcome");
   } else {
-    res.redirect("/login?msg=fail");
+    //The ? is a special character in a url
+    //It designates a query string and everything after it are key-value pairs separated by &
+    res.redirect("/login?msg=fail&test=hello");
   }
   //res.json(req.body);
 });
