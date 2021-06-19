@@ -60,6 +60,12 @@ app.get("/welcome", (req, res, next) => {
   });
 });
 
+app.get("/logout", (req, res, next) => {
+  //res.clearCookietakes 1 arg: the cookie to clear by name
+  res.clearCookie("username");
+  res.redirect("/login");
+});
+
 app.listen(3000, () => {
   console.log("Server is listening on port 3000");
 });
