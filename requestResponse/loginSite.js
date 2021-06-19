@@ -79,13 +79,14 @@ app.get("/welcome", (req, res, next) => {
   });
 });
 
-//app.param() takes 2 args: 
+//app.param() takes 2 args:
 //1 param to look for in the route
 //2 the callback to run with the usuals
-app.param("id", (req, res, next, id) => {
-  console.log("Params called:", id);
-  next();
-});
+
+// app.param("id", (req, res, next, id) => {
+//   console.log("Params called:", id);
+//   next();
+// });
 
 //Params are used to pass different paths for urls
 //Query strings are used to pass on info to the server
@@ -93,11 +94,32 @@ app.get("/story/:storyId", (req, res, next) => {
   res.send(`<h1>Story ${req.params.storyId}</h1>`);
 });
 
+app.get("/statement", (req, res, next) => {
+  //Just shows the file
+  // res.sendFile(
+  //   path.join(__dirname, "userStatements/BankStatementChequing.png")
+  // );
 
+  //App has download options with 2 args:
+  //1. Filename
+  //2. What you want the filename to download as
 
+  //res.download sets rhe headers to:
+  //content-disposition to "attachment" with a filename of the 2nd arg
+  res.download(
+    path.join(__dirname, "userStatements/BankStatementChequing.png"),
+    "Your BankStatement.png"
+  );
+  //If there is an error in sending the file, headers may already be sent
+  //You can check them with
 
-
-
+  if (error) {
+    //res.headersSent is a bool, true if the headers are alredy sent
+    if (!res.headersSent) {
+      res.redirect("/download/error");
+    }
+  }
+});
 
 app.get("/logout", (req, res, next) => {
   //res.clearCookietakes 1 arg: the cookie to clear by name
