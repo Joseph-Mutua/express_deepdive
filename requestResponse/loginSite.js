@@ -26,7 +26,7 @@ app.use((req, res, next) => {
   }
 
   //Send me onto the next piece of middleware!!
-  next()
+  next();
 });
 
 app.get("/", (req, res, next) => {
@@ -78,6 +78,26 @@ app.get("/welcome", (req, res, next) => {
     username: req.cookies.username,
   });
 });
+
+//app.param() takes 2 args: 
+//1 param to look for in the route
+//2 the callback to run with the usuals
+app.param("id", (req, res, next, id) => {
+  console.log("Params called:", id);
+  next();
+});
+
+//Params are used to pass different paths for urls
+//Query strings are used to pass on info to the server
+app.get("/story/:storyId", (req, res, next) => {
+  res.send(`<h1>Story ${req.params.storyId}</h1>`);
+});
+
+
+
+
+
+
 
 app.get("/logout", (req, res, next) => {
   //res.clearCookietakes 1 arg: the cookie to clear by name
